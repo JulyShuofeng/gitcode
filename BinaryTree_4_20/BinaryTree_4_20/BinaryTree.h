@@ -35,6 +35,22 @@ public:
 		_root=_CreatTree(a,size,index,invalid);
 	}
 
+	BinaryTree(const BinaryTree& tree)
+	{
+		_root=_Copy(tree._root);
+	}
+
+	~BinaryTree()
+	{
+		_Destory(_root);
+	}
+
+	BinaryTree& operator=(const BinaryTree tree)
+	{
+		swap(_root,tree._root);
+		return *this;
+	}
+
 	void  PrevOrder()
 	{
 		_PrevOrder(_root);
@@ -57,6 +73,16 @@ public:
 	{
 		_LevelOrder(_root);
 		cout<<endl;
+	}
+
+	size_t Size()
+	{
+		return _Size(_root);
+	}
+
+	size_t Depth()
+	{
+		return _Depth(_root);
 	}
 
 protected:
@@ -109,7 +135,7 @@ protected:
 	{		   
 		if(root==NULL)
 		{
-			return 0;
+			return;
 		}
 		vector<BinaryTreeNode<T>*> vec;
 		vec.push_back(root);
@@ -123,13 +149,89 @@ protected:
 				cout<<vec[cur]->_data<<" ";
 				if(vec[cur]->_left)
 				{
-
+					vec.push_back(vec[cur]->_left);
 				}
+				if(vec[cur]->_right)
+				{
+					vec.push_back(vec[cur]->_right);
+				}
+				cur++;
 			}
 		}
 		
 	}
 
+	BinaryTreeNode<T>* _Copy(BinaryTreeNode<T>* root)
+	{
+		if(root==NULL)
+		{
+			return NULL;
+		}
+
+		BinaryTreeNode<T>* newroot=new BinaryTreeNode<T>(root->_data);
+		newroot->_left=_Copy(root->_left);
+		newroot->_right=_Copy(root->_right);
+		return newroot;
+	}
+
+	void _Destory(BinaryTreeNode<T>* root)
+	{
+		if(root==NULL)
+		{
+			return;
+		}
+
+		BinaryTreeNode<T>* cur=root;
+		BinaryTreeNode<T>* del=cur;
+		if(cur->_left)
+		{
+			_Destory(cur->_left);
+		}
+		if(cur->_right)
+		{
+			_Destory(cur->_right);
+		}
+		delete del;
+
+	}
+
+	size_t _Depth(BinaryTreeNode<T> *root)
+	{
+		BinaryTreeNode<T> *cur=root;
+		if(root==NULL)
+		{
+			return 0;
+		}
+		size_t dep=1;
+		if(cur->_left)
+		{
+			_Depth(cur->_left);
+			dep++;
+		}
+		if(cur->_right)
+		{
+			_Depth(cur->_right);
+			dep++;
+		}
+		return dep;
+	}
+
+	size_t _Size(BinaryTreeNode<T> *root)
+	{
+		if(root==NULL)
+		{
+			return 0;
+		}
+
+		BinaryTreeNode<T> *cur=root;
+		size_t size=1;
+		while(cur!=NULL)
+		{
+			size+=_Size(root->_left);
+			size+=_Size(root->_right);
+		}
+		return size;
+	}
 
 protected:
 	BinaryTreeNode<T> *_root;											 
