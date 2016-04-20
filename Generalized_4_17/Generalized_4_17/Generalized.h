@@ -22,13 +22,13 @@ struct GeneralizedNode
 
 	GeneralizedNode(Type type=HEAD,char value=0)
 		:_type(type)
-		,_value(value)
+		,_next(NULL)
 	{
 		 if(_type==VALUE)
 		 {
 			 _value=value;		 
 		 }
-		 else  if(_type=SUB)
+		 else  if(_type==SUB)
 		 {
 			 _sublink=NULL;
 		 }
@@ -43,13 +43,18 @@ public:
 	 {
 		 _head=_CreateList(str);
 	 }
+
+	 Generalized()
+		 :_head(new GeneralizedNode())
+	 {}
 	 
 	 ~ Generalized()
 	 {
-		 //_Clear(_head);
+		 _Clear(_head);
+		 _head=NULL;
 	 }
-
-	 int Depth()
+					 
+	 size_t Depth()	   //深度
 	 {
 		return  _Depth(_head);
 	 }
@@ -58,6 +63,23 @@ public:
 	 {
 
 		 _Print(_head);
+		 cout<<endl;
+	 }
+
+	 size_t Size()		 
+	 {
+		  return _Size(_head);
+	 }
+
+	 Generalized(const Generalized &g)
+	 {
+		 _head=_Copy(g._head);
+	 }
+
+	 Generalized& operator=( Generalized g)
+	 {
+		 swap(this->_head,g._head);
+		 return *this;
 	 }
 
 protected:
@@ -80,9 +102,9 @@ protected:
 			 else if(*str=='(')
 			 {
 				 cur->_next=new GeneralizedNode(SUB);
-				 
-				 cur->_sublink=_CreateList(str);
 				 cur=cur->_next;
+				 cur->_sublink=_CreateList(str);
+				 
 			 }
 			 else if(*str==')')
 			 {	
@@ -101,7 +123,7 @@ protected:
 
 	bool _Isvalue(char ch)
 	{
-		if( ch>='0'&&ch<='9' ||  ch>='a'&&ch<='z'  ||  ch>='A'&&ch<='z')
+		if( (ch>='0'&&ch<='9') ||  (ch>='a'&&ch<='z')  ||  (ch>='A'&&ch<='z'))
 		{
 			return true;
 		}
@@ -134,15 +156,15 @@ protected:
 		 return max+1;
 	 }*/
 
-	int _Depth(GeneralizedNode* head)
+	size_t _Depth(GeneralizedNode* head)
 	{
-		int dep=1;
+		size_t dep=1;
 		GeneralizedNode* cur=head;
 		while(cur!=NULL)
 		{
 			if(cur->_type==SUB)
 			{
-				if(_Depth((cur->_sublink)+1) > dep)
+				if(_Depth(cur->_sublink)+1> dep)
 				{
 					dep=_Depth(cur->_sublink)+1 ;
 				}
@@ -152,27 +174,6 @@ protected:
 		return dep;
 	}
 
-	 //int _Depth(GeneralizedNode* head){             //深度的计算，找到子表个数最多
-  //      GeneralizedNode* begin = head;
-  //      int depth = 0;
-  //      int max = 0;
- 
-  //      while (begin){
-  //      if (begin->_type == HEAD)
-  //          return 1;
-  //      else if (begin->_type == VALUE){
-  //          begin = begin->_next;
-  //      }
-  //      else if (begin->_type == SUB){
-  //          depth = _Depth(begin->_sublink);
-  //          if (depth > max)
-  //              max = depth;
-  //          begin = begin->_next;
-  //      }
-  //      }
-  //      return max+1;
-  //  }
-
 	void _Clear(GeneralizedNode* head)
 	{
 		GeneralizedNode* cur = head;
@@ -180,9 +181,9 @@ protected:
 		{
 			GeneralizedNode* del = cur;	
 			cur = cur->_next;
- 			if(cur->_type == SUB)
+ 			if(del->_type == SUB)
 				{
-                    _Clear(cur->_sublink);
+                    _Clear(del->_sublink);
                 }
             delete del;
 		}
@@ -191,18 +192,16 @@ protected:
 	void _Print(GeneralizedNode* head)
 	{
 		GeneralizedNode* cur=head;
-		
-		cur=cur->_next;
 		while(cur)
 		{  
 			if(cur->_type==HEAD)
 			{
-				cout<<"（";
+				cout<<"(";
 			}
 			else if(cur->_type==VALUE)
 			{
 				cout<<cur->_value; 
-				if(cur!=NULL)	
+				if(cur->_next)	
 				{	
 					cout<<"," ;
 				}
@@ -220,5 +219,48 @@ protected:
 		}
 		cout<<")";
 	}
+
+	size_t _Size(GeneralizedNode* head)
+	{
+		GeneralizedNode* cur=head;
+		size_t size=0;
+		while(cur)
+		{
+			if(cur->_type==VALUE)
+			{
+				++size;
+			}
+			else if(cur->_type==SUB)
+			{
+				size+=_Size(cur->_sublink);		
+			}
+			cur=cur->_next;
+		}
+		return size;
+	}
+
+	 GeneralizedNode* _Copy(GeneralizedNode* head)
+	 {
+		 GeneralizedNode* newHead=new GeneralizedNode(HEAD);
+		 assert(head->_type==HEAD);
+		 GeneralizedNode* cur=head->_next;
+		 GeneralizedNode* newcur=newHead;
+		 while(cur)
+		 {
+			 if(cur->_type==VALUE)
+			 {
+				 newcur->_next=new GeneralizedNode(VALUE,cur->_value);
+				 newcur=newcur->_next ;
+			 }
+			 else if(cur->_type==SUB)
+			 {
+				 newcur->_next=new GeneralizedNode(SUB);
+				 newcur=newcur->_next;
+				 newcur->_sublink=_Copy(cur->_sublink);
+			 }
+			 cur=cur->_next;
+		 }
+		 return newHead;
+	 }
 
 };

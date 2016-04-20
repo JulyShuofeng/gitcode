@@ -3,9 +3,14 @@
 
 void Test()
 {
-	Generalized s("((e))");
-	//cout<<s.Depth();
+	Generalized s("(a,(c,c))");
+	cout<<s.Depth()<<endl;
 	s.Print();
+	cout<<s.Size()<<endl;
+	Generalized z(s);
+	z.Print();
+	Generalized w=z;
+	w.Print();
 }
 int main()
 {
