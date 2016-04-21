@@ -225,7 +225,7 @@ protected:
 
 		BinaryTreeNode<T> *cur=root;
 		size_t size=1;
-		while(cur!=NULL)
+		if(cur!=NULL)
 		{
 			size+=_Size(root->_left);
 			size+=_Size(root->_right);

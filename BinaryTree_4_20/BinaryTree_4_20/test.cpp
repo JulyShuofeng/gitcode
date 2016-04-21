@@ -3,7 +3,8 @@
 void Test()
 {
 	int arr1[10]={1,2,3,'#','#',4,'#','#',5,6};
-	BinaryTree<int> t(arr1,10,'#');
+	int arr2[15] = {1,2,'#',3,'#','#',4,5,'#',6,'#',7,'#','#',8};
+	BinaryTree<int> t(arr2,15,'#');
 	t.PrevOrder();
 	//cout<<t.Depth()<<endl;
 	cout<<t.Size()<<endl;
