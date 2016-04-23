@@ -2,6 +2,8 @@
  
 #include<iostream>
 #include<vector>
+#include<stack>
+#include<queue>
 using namespace std;
 
 template<class T>
@@ -75,14 +77,98 @@ public:
 		cout<<endl;
 	}
 
+	void Level_Order()//队列版本
+	{
+		queue<BinaryTreeNode<T>*> q;
+		if(_root)
+		{
+			q.push(_root);
+		}
+
+		while(!q.empty())
+		{
+			BinaryTreeNode<T>* front=q.front();
+			cout<<front->_data<<" ";
+			if(front->_left)
+			{
+				q.push(front->_left); //利用队列先进先出的特点
+			}
+			if(front->_right)
+			{
+				q.push(front->_right);
+			}
+			q.pop();
+		}
+		cout<<endl;
+	}
+
 	size_t Size()
 	{
-		return _Size(_root);
+		//return _Size(_root);
+		return _static_size(_root);
 	}
 
 	size_t Depth()
 	{
 		return _Depth(_root);
+	}
+					  
+	void Prev_Order()//非递归
+	{
+		BinaryTreeNode<T>* cur=_root;
+		stack<BinaryTreeNode<T>*> s;
+		while(cur || !s.empty())
+		{
+			while(cur)				
+			{
+				 cout<<cur->_data<<" ";
+			     s.push(cur);
+				 cur=cur->_left;
+			}
+			if(!s.empty())
+			{
+				cur=s.top();
+				s.pop();
+				cur=cur->_right;
+			}
+		}
+	}
+
+	void In_Order()//非递归  中序
+	{
+		BinaryTreeNode<T>* cur=_root;
+		stack<BinaryTreeNode<T>*> s;
+		while(cur || !s.empty())
+		{
+		   while(cur)
+		   {
+			   s.push(cur);
+			   cur=cur->_left;
+		   }
+		   BinaryTreeNode<T>* top=s.top();
+		   cout<<top->_data<<" ";
+		   s.pop();
+		   cur=top->_right;
+		}
+	}
+
+	void Post_Order()
+	{
+		BinaryTreeNode<T>* cur=_root;
+		stack<BinaryTreeNode<T>*> s;
+		while(cur || !s.empty())
+		{
+			while(cur)
+			{
+				cur=cur->_left;
+				s.push(cur);
+			}
+			BinaryTreeNode<T>* top=s.top();
+			cout<<top->_data<<" ";
+			s.pop();
+			cur=top->_right;
+		}
+		cout<<_root->_data<<" ";
 	}
 
 protected:
@@ -231,6 +317,19 @@ protected:
 			size+=_Size(root->_right);
 		}
 		return size;
+	}
+
+	size_t _static_size(BinaryTreeNode<T>* root) //静态版本
+	{
+		static size_t ssize	=0;
+		if(root==NULL)
+		{
+			return 0;
+		}
+		++ssize;
+		 _static_size(root->_left);
+		 _static_size(root->_right);
+		return ssize;
 	}
 
 protected:
