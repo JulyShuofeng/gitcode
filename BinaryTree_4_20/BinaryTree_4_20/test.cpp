@@ -5,8 +5,8 @@ void Test()
 	int arr1[10]={1,2,3,'#','#',4,'#','#',5,6};
 	int arr2[15] = {1,2,'#',3,'#','#',4,5,'#',6,'#',7,'#','#',8};
 	BinaryTree<int> t(arr1,10,'#');
-	t.PrevOrder();
-	t.Prev_Order();
+	//t.PrevOrder();
+	//t.Prev_Order();
 	//t.In_Order();
 	//t.Level_Order();
 	//cout<<t.Depth()<<endl;

@@ -155,20 +155,28 @@ public:
 	void Post_Order()
 	{
 		BinaryTreeNode<T>* cur=_root;
+		BinaryTreeNode<T>* prev=NULL;
 		stack<BinaryTreeNode<T>*> s;
 		while(cur || !s.empty())
 		{
 			while(cur)
 			{
-				cur=cur->_left;
 				s.push(cur);
+				cur=cur->_left;
 			}
 			BinaryTreeNode<T>* top=s.top();
-			cout<<top->_data<<" ";
-			s.pop();
-			cur=top->_right;
+			if(top->_right==NULL || top->_right==prev) //至此说明左边已经遍历完
+			{
+				cout<<top->_data<<" ";
+				s.pop();
+				prev=top;  //由于top定义在出栈之前，所以其仍未出栈前的栈顶元素
+			}
+			else
+			{
+				cur=top->_right;
+			}
 		}
-		cout<<_root->_data<<" ";
+		cout<<endl;;
 	}
 
 protected:
