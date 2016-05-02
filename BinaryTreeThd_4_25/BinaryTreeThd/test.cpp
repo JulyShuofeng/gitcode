@@ -3,15 +3,15 @@
 void test()
 {
   BinaryTreeThd<int> t;
-  int array1 [10] = {1, 2, 3, '#', '#', 4, '#' , '#', 5, 6};
+  int array1[10] = {1, 2, 3, '#', '#', 4, '#' , '#', 5, 6};
   BinaryTreeThd<int> t1(array1,10,'#');
-  //t1.InOrderThreading();
-
+  t1.InOrderThreading();
+  t1.InOrderThd();
 }
 
 int main()
 {
 	test();
-	//getchar();
+	getchar();
 	return 0;
 }
