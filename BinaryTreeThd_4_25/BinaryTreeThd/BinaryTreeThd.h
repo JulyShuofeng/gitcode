@@ -78,6 +78,26 @@ public:
 		 cout<<endl;
 	 }
 
+	 void PrevThd()
+	 {
+		 if(_root==NULL)
+		 {
+			 return;
+		 }
+		 Node* cur=_root;
+		 while(cur)
+		 {
+			 while(cur->_leftTag==LINK)
+			 {
+				 cout<<cur->_data<<" ";
+				 cur=cur->_left;
+			 }
+			 cout<<cur->_data<<" ";
+			 cur=cur->_right;
+		 }
+		 cout<<endl;
+	 }
+
 protected:
 
 	Node* _CreatTree(const T* a,size_t size,size_t& index,const T &invalid)
@@ -111,6 +131,35 @@ protected:
 		}
 		prev=cur;
 		_InOrderThreading(cur->_right,prev);//ÏßË÷»¯ÓÒ×ÓÊ÷
+	 }
+		   
+	 void  _PrevThreading(Node* cur,Node*& prev)
+	 {	
+		 if(cur==NULL)
+		 {
+			 return;
+		 }
+		 if(cur->_left==NULL)
+		  {
+			  cur->_leftTag=THREAD;
+			  cur->_left=prev;
+		  }
+		 if(prev!=NULL && prev->_right==NULL)
+		  {
+			  prev->_rightTag=THREAD;
+			  prev->_right=cur;
+		  }		  
+		 
+		  prev=cur;
+
+		  if(cur->_leftTag==LINK)
+		  
+			   _PrevThreading(cur->_left,prev);
+		  
+		  if(cur->_rightTag==LINK)
+		  
+			    _PrevThreading(cur->_right,prev);
+		  
 	 }
 
 

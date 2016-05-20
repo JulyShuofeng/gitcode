@@ -7,6 +7,10 @@ void test()
   BinaryTreeThd<int> t1(array1,10,'#');
   t1.InOrderThreading();
   t1.InOrderThd();
+
+   BinaryTreeThd<int> t2(array1,10,'#');
+   t2.PrevThreading();
+   t2.PrevThd();
 }
 
 int main()
