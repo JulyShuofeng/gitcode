@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include<string>
+#include<stdlib.h>
 
 using namespace std;
 
@@ -23,71 +24,181 @@ struct HashTableNode
 };
 
 template<class K>
-struct _HashFunc
+struct HashFunc
 {
-	size_t operator()(const K& key)
+	size_t operator()(const K& key)		 //»ù±¾ÀàÐÍ
 	{
 		return key;
 	}
 };
+static size_t  Hashstr(const char * str)//×Ö·û´®¹þÏ£Ëã·¨
+{
+    unsigned int seed = 131; // 31 131 1313 13131 131313
+    unsigned int hash = 0;
+    while (*str)
+    {
+        hash = hash * seed + (unsigned int)(*str++);
+    }
+    return (hash & 0x7FFFFFFF);
+}
 template<>
-struct _HashFunc<string>
+struct HashFunc<string>
 {
 	size_t operator()(const string& str)
 	{
-		return 	_HashFunc(str.c_str());
+		return 	Hashstr(str.c_str());
 	}
 };
 
-template <class K,class V,class HashFunc=_HashFunc<K>>
+template <class K,class V,class HF=HashFunc<K> >
 class HashTable
 {
 	typedef   HashTableNode<K,V> Node;
 public:
-	HashTable(size_t capcity=10)
-		:_tables(new Node[capcity])
-		,_states(new States[capcity])
-		,_capcity(capcity)
+	HashTable(size_t capacity=10)
+		:_tables(new Node[capacity])
+		,_states(new State[capacity])
+		,_capacity(capacity)
 	{
-		for(size_t i=0; i<_capcity; i++)
+		for(size_t i=0; i<_capacity; i++)
 		{
 			_states[i]=EMPTY;
 		}
 	}
 
+	HashTable(const HashTable<K,V> &ht)	//¿½±´¹¹Ôì
+		:_tables(NULL)
+		,_states(NULL)
+		,_size(0)
+		,_capacity(0)
+	{
+		HashTable<K,V> tmp(ht._capacity);
+		for(size_t i=0; i<ht._states[i]; i++)
+		{
+			if(ht._states[i]==EXITS)
+			{
+				tmp.Insert(ht._tables[i]);	
+			}
+		}
+		this->Swap(tmp);
+	}
+
 	~HashTable()
 	{
-		if(_states!=EXITS)
+		if(_tables)
 		{
 			delete []_tables;
 			delete []_states;
+			_size=0;
+			_capacity=0;
 		}
 	}
 
-	bool Insert(const K& key,const V& value)
+	void Swap(HashTable<K,V> &ht)	 //½»»»
 	{
+		swap(ht._tables,this->_tables);
+		swap(ht._states,this->_states);
+		swap(ht._size,this->_size);
+		swap(ht._capacity,this->_capacity);
+	}
 
+	bool Insert(const K& key,const V& value)	//²åÈë
+	{
+		_CheckCapacity();
+		size_t index=_HashFunc(key);	 //¹þÏ£º¯Êý
+		size_t i=0;
+		while(_states[index]==EXITS)
+		{
+			if(_tables[index]._key==key && _tables[index]._value==value)   //·ÀÖ¹ÈßÓà
+			{
+			   return false;
+			}
+			index =_HashFunc(key)+i*i;
+			index%=_capacity;
+			++i;
+			/*if(index>=_capacity)
+			{
+				index=index-_capacity;
+			}*/
+		}
+		 _tables[index]._key=key;
+		 _tables[index]._value=value;
+		 _states[index]=EXITS;
+		 _size++;
+		 return true;
 	}
 
 	Node* Find(const K& key)
 	{
-
+		 size_t index=_HashFunc(key);
+		 size_t i=0;
+		 while(_states[index]!=EMPTY)
+		 {
+			 if(_tables[index]._key==key)
+			 {
+				 if(_states[index]!=DELETE)
+				 {
+					 return &(_tables[index]);	  //why
+				 }
+				 else
+				 {
+					 return NULL;
+				 }
+			 }
+				  index=_HashFunc(key)+i*i;
+				  index%=_capacity;
+				  ++i;
+		 }
+		 return NULL;
 	}
 
-	size_t _HashFunc(const char *str) //×Ö·û´®¹þÏ£Ëã·¨
+	void Print()
 	{
-		unsigned int seed = 131; // 31 131 1313 13131 131313
-        unsigned int hash = 0;
-		while(*str)
+	    for (size_t i = 0; i < _capacity; ++i)
 		{
-			hash = hash * seed + (unsigned int)(*str++);
+			cout<<i<<":";
+			if(_states[i]==EXITS)
+			{
+				cout<<_tables[i]._key<<"-"<<_tables[i]._value<<"		";
+			}
+			else
+			{
+				cout<<"NULL"<<"	";
+			}
 		}
-		 return (hash & 0x7FFFFFFF);
+		cout<<endl;
 	}
+		
+	
 protected:
 	Node *_tables;	  //¹þÏ£±í
 	size_t _size;	  //ÔªËØ¸öÊý
-	size_t _capcity;//ÈÝÁ¿
+	size_t _capacity;//ÈÝÁ¿
 	State *_states;	//×´Ì¬±í
 
-};
+protected:
+
+	size_t _HashFunc(const K& key) 
+	{
+		HF ht;
+		return ht(key)%_capacity;
+	   // return index+(2*i-1);
+	}
+
+	void _CheckCapacity()
+	{
+		if(_size*10/_capacity==7)
+		{
+		   HashTable<K,V> tmp(2*_capacity);
+		   for(size_t i=0; i<_capacity; i++)
+		   {
+			   if(_states[i]==EXITS)
+			   {
+				   tmp.Insert(_tables[i]._key,_tables[i]._value);
+			   }
+		   }
+		   this->Swap(tmp);
+		}
+	}
+
+};										
