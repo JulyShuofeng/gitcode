@@ -1,7 +1,7 @@
 #include"BitMap.h"
 #include"BloomFilter.h"
 
-void Test()
+void TestMapBit()
 {
 	BitMap bm(100);
 	bm.Set(1);
@@ -17,9 +17,23 @@ void Test()
 	cout<<"15?	"<<":"<<bm.Test(15)<<endl;
 }
 
+void TestBloomFilter()
+{
+	BloomFilter<string> bm(100);
+	bm.Set("BloomFil1");
+	bm.Set("BloomFil2");
+	bm.Set("BloomFil3");
+	bm.Set("BloomFil4");
+	bm.Set("BloomFil5");
+	cout<<"1?"<<"		"<<bm.Test("BloomFil1")<<endl;
+	cout<<"2?"<<"		"<<bm.Test("BloomFil2")<<endl;
+	cout<<"8?"<<"		"<<bm.Test("BloomFil8")<<endl;
+
+}
+
 int main()
 {
-	Test();
+	TestBloomFilter();
 	getchar();
 	return 0;
 }
