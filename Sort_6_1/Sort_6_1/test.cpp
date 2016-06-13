@@ -19,7 +19,9 @@ int main()
 	//cout<<check();
 	//TestHeapSort();
 	//TestQuickSort();
-	TestMergeSort();
+	//TestMergeSort();
+	//TestLSDSort();
+	TestCountSort();
 	getchar();
 	 return 0;
 }

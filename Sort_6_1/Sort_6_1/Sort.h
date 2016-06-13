@@ -429,3 +429,105 @@ void TestMergeSort()
    MergeSort(a,10);
    Print(a,10);
 }
+
+int MaxDigit(int* a, int n)	   //通过数组中最大的数得出需要的位数
+{
+	int max =10;
+	int digit = 1;
+	for (int i = 0; i < n; i++)
+	{
+		while (a[i]>max)
+		{
+			digit++;
+			max *= 10;
+		}
+	}
+	return digit;
+}
+
+void LSDSort(int* a, int n) //基数排序
+{
+	assert(a);
+	int count[10] = {0};	 //记录次数
+	int start[10] = { 0 };
+	int radix = 1;
+	int  digit= MaxDigit(a, n);
+	int *Base = new int[n];
+	for (int i = 1; i <= digit; i++)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			int k = (a[i] / radix) % 10;	   //从个位开始依次计算，count对应位置出现的个数
+			count[k]++;
+		}
+		for (int j =1; j <10; j++)	  //每个位出现的起始位置	   （下标从1开始）
+		{
+			start[j] = start[j - 1] + count[j - 1];
+		}
+		for (int k = 0; k <n; k++)		  //根据start，将a中的数据放在Base中,已排好序
+		{
+			int num=( a[k] / radix)%10;
+			Base[start[num]++] = a[k];
+		}
+		for (int i = 0; i < n; i++)
+		{
+			a[i] = Base[i];
+		}
+		radix = radix * 10;
+	}
+	delete[] Base;
+}
+
+void TestLSDSort()
+{
+	int a[] = { 9, 5, 4, 3, 8, 6, 2, 7, 1, 0 };
+	Print(a, 10);
+	LSDSort(a, 10);
+	Print(a, 10);
+}
+
+void CountSort(int *a, int n)  //计数排序
+{
+	assert(a);
+	int max = a[0];
+	int min = a[0];
+	for (int i = 0; i < n; i++)
+	{
+		if (a[i] < min)
+		{
+			min = a[i];
+		}
+		if (a[i]>max)
+		{
+			max = a[i];
+		}
+	}
+	int range = max - min + 1;
+	int *count = new int[range];
+	memset(count, 0, sizeof(int)*range);
+	for (int i = 0; i < n; i++)
+	{
+		count[a[i] - min]++;
+		//把数组count中对应位置制成数字，代表这个位置有几个相同的数
+        //列如制成1，代表这个位置有一个数
+        //列如制成2，代表这个位置有两个相同的数
+	}
+	int j = 0;
+	for (int i = 0; i < range; i++)
+	{
+		while (count[i]>0)
+		{
+			a[j++] = i + min;
+			count[i]--;
+		}
+	}
+	delete[] count;
+}
+
+void TestCountSort()
+{
+	int a[] = { 9, 5, 4, 3, 8, 6, 2, 7, 1, 0 };
+	Print(a, 10);
+	CountSort(a, 10);
+	Print(a, 10);
+}
