@@ -1,0 +1,33 @@
+No.1, Desc:数据库m
+Filename:e:\gitcode\performanceprofiler\performanceprofiler\performanceprofiler.cpp,Line:15,Function:Fun
+ThreadId:3848, CostTime:0.90 s, CallCount:3
+ThreadId:8584, CostTime:1.51 s, CallCount:5
+ThreadId:10264, CostTime:1.21 s, CallCount:4
+TotalCostTime:14.46 s, TotalCallCount:48, AverCostTime:301 ms
+
+No.2, Desc:中间逻辑m
+Filename:e:\gitcode\performanceprofiler\performanceprofiler\performanceprofiler.cpp,Line:11,Function:Fun
+ThreadId:3848, CostTime:0.60 s, CallCount:3
+ThreadId:8584, CostTime:1.00 s, CallCount:5
+ThreadId:10264, CostTime:0.80 s, CallCount:4
+TotalCostTime:9.65 s, TotalCallCount:48, AverCostTime:201 ms
+
+No.3, Desc:网络m
+Filename:e:\gitcode\performanceprofiler\performanceprofiler\performanceprofiler.cpp,Line:7,Function:Fun
+ThreadId:3848, CostTime:0.30 s, CallCount:3
+ThreadId:8584, CostTime:0.51 s, CallCount:5
+ThreadId:10264, CostTime:0.41 s, CallCount:4
+TotalCostTime:4.86 s, TotalCallCount:48, AverCostTime:101 ms
+
+No.4, Desc:网络s
+Filename:e:\gitcode\performanceprofiler\performanceprofiler\performanceprofiler.cpp,Line:23,Function:TestSingleThead
+TotalCostTime:0.00 s, TotalCallCount:1, AverCostTime:0 ms
+
+No.5, Desc:中间逻辑s
+Filename:e:\gitcode\performanceprofiler\performanceprofiler\performanceprofiler.cpp,Line:28,Function:TestSingleThead
+TotalCostTime:0.00 s, TotalCallCount:1, AverCostTime:0 ms
+
+No.6, Desc:数据库s
+Filename:e:\gitcode\performanceprofiler\performanceprofiler\performanceprofiler.cpp,Line:34,Function:TestSingleThead
+TotalCostTime:0.00 s, TotalCallCount:1, AverCostTime:0 ms
+
